@@ -156,7 +156,7 @@ const formatRemarks = (remarks) => {
     remarks = remarks.replace("/R/", "");
     if(remarks.trim().length == 0) return "";
 
-    remarks = remarks.split("RMK/")[1];
+    if(remarks.includes("RMK/")) remarks = remarks.split("RMK/")[1];
 
     if(remarks.length > 25) remarks = remarks.substring(0,25).slice(0, -3) + "***";
     remarks = remarks.trim();
@@ -176,7 +176,7 @@ const formatAcType = (acType) => {
     acType = acType.replace("J/", "");
 
     acType = acType + "/";
-    acType = JSON.parse(fs.readFileSync("./acft_database.json"))["aircraft"][acType.toUpperCase().split("/")[0]].recat + "/" + acType;
+    if(JSON.parse(fs.readFileSync("./acft_database.json"))["aircraft"][acType.toUpperCase().split("/")[0]]) acType = JSON.parse(fs.readFileSync("./acft_database.json"))["aircraft"][acType.toUpperCase().split("/")[0]].recat + "/" + acType;
 
     return acType.slice(0,-1);
 }
@@ -184,11 +184,12 @@ const formatAcType = (acType) => {
 const isAtATL = (lat, long) => {
     const fence = 0.026079;
 
-    const northernLat = lat + fence;
-    const westernLong = long - fence;
+    const northernLat = 33.63669961 + fence;
+    const westernLong = (-84.427864) - fence;
 
-    const southernLat = lat - fence;
-    const easternLong = long - fence;
+    const southernLat = 33.63669961 - fence;
+    const easternLong = (-84.427864) + fence;
 
     if((lat < northernLat && lat > southernLat) && (long > westernLong && long < easternLong)) return true;
+    return false;
 }

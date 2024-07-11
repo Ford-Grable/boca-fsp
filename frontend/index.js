@@ -1,5 +1,3 @@
-
-
 $("#callsign-request").submit(function() {
     $.post("/printCallsign", { callsign: $(this).find("input[name='cs']").val() })
     .done(async function(data) {
@@ -28,9 +26,11 @@ setInterval(() => {
         if(data.length == 0) return;
         qz.websocket.connect().then(async() => {
             var config = qz.configs.create("Boca BIDI FGL 26/46 300 DPI");
+            var dataToPrint = [];
             for(let i = 0; i < data.length; i++) {
-                await qz.print(config, getData(data[i]));
+                dataToPrint.push(getData(data[i]));
             }
+            await qz.print(config, dataToPrint);
             return;
         }).then(() => {
             return qz.websocket.disconnect();
@@ -45,7 +45,7 @@ function getData(data) {
     return [
         `<RC10,10><TTF1,12><HW1,1>${data[0]}`,
         `<RC60,130><TTF1,12><HW1,1>${data[1] ? data[1] : " "}`,
-        `<RC60,300><TTF1,24><HW1,1>${data[2]}`,
+        `<RC60,300><TTF1,24><HW1,1>${data[2] ? data[2] : " "}`,
         `<RC120,10><TTF1,12><HW1,1>${data[3]}`,
         `<RC225,10><TTF1,12><HW1,1>${data[4]}`,
         `<RC0,455><LT4><VX375>`,
