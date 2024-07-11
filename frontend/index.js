@@ -44,7 +44,7 @@ setInterval(() => {
 function getData(data) {
     return [
         `<RC10,10><TTF1,12><HW1,1>${data[0]}`,
-        `<RC60,130><TTF1,12><HW1,1>${data[1] ? data[1] : " "}`,
+        `<RC65,130><TTF1,12><HW1,1>${data[1] ? data[1] : " "}`,
         `<RC60,300><TTF1,24><HW1,1>${data[2] ? data[2] : " "}`,
         `<RC120,10><TTF1,12><HW1,1>${data[3]}`,
         `<RC225,10><TTF1,12><HW1,1>${data[4]}`,
@@ -64,8 +64,8 @@ function getData(data) {
         `<RC0,1850><LT4><VX375>`,
         `<RC0,2050><LT4><VX375>`,
         `<RC0,2250><LT4><VX375>`,
-        `<RC90,1850><LT4><HX900>`,
-        `<RC190,1850><LT4><HX900>`,
+        `<RC90,1850><LT4><HX600>`,
+        `<RC190,1850><LT4><HX600>`,
         `<RC200,190><X2><NP10>*${data[11]}*`,
         `<p>`
     ];
