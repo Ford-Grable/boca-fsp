@@ -20,6 +20,18 @@ $("#callsign-request").submit(function() {
     });
 });
 
+$("#blank-strip").click(function() {
+    qz.websocket.connect().then(() => {
+        var config = qz.configs.create("Boca BIDI FGL 26/46 300 DPI");
+        return qz.print(config, getEmptyFormat())
+    }).then(() => {
+        return qz.websocket.disconnect();
+    }).catch((err) => {
+        console.error(err);
+        // process.exit(1);
+    });
+});
+
 setInterval(() => {
     $.post("/getNewPlans")
     .done(function(data) {
@@ -67,6 +79,22 @@ function getData(data) {
         `<RC90,1850><LT4><HX600>`,
         `<RC190,1850><LT4><HX600>`,
         `<RC200,190><X2><NP10>*${data[11]}*`,
+        `<p>`
+    ];
+}
+
+function getEmptyFormat() {
+    return [
+        `<RC0,455><LT4><VX375>`,
+        `<RC90,455><LT4><HX185>`,
+        `<RC190,455><LT4><HX185>`,
+        `<RC0,635><LT4><VX375>`,
+        `<RC0,915><LT4><VX375>`,
+        `<RC0,1850><LT4><VX375>`,
+        `<RC0,2050><LT4><VX375>`,
+        `<RC0,2250><LT4><VX375>`,
+        `<RC90,1850><LT4><HX600>`,
+        `<RC190,1850><LT4><HX600>`,
         `<p>`
     ];
 }
