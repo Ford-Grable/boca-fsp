@@ -5,6 +5,17 @@ import * as fs from "fs";
 
 import axios from "axios";
 
+process.on("uncaughtException", (error) => {
+    if(error.message === "read ECONNRESET") return;
+    console.error(`Caught Unhandled Exception`);
+    console.dir(error != null ? error.stack : error);
+});
+
+process.on("unhandledRejection", (error) => {
+    console.error(`Caught Unhandled Rejection`);
+    console.dir(error != null ? error.stack : error);
+});
+
 const app = express();
 const port = 4000;
 
@@ -41,12 +52,13 @@ app.post("/getNewPlans", async(req, res) => {
         ]);
     }
 
-    return res.send(formattedStrips);
+    return res.send([])//formattedStrips);
 });
 
 app.post("/printCallsign", async(req, res) => {
     let strip = (await axios.get("https://data.vatsim.net/v3/vatsim-data.json")).data["pilots"].filter((pilot) => pilot["flight_plan"] !== null && pilot["callsign"] == req.body.callsign)[0];
-    if(strip.length === 0) return res.send("callsign not found")
+    if(strip == undefined || strip == null) return res.send("callsign not found");
+    if(strip.length === 0) return res.send("callsign not found");
     const formattedStrip = [
         strip["callsign"], //0
         strip["flight_plan"].revision_id > 1 ? strip["flight_plan"].revision_id - 1 : false, //1
@@ -66,6 +78,14 @@ app.post("/printCallsign", async(req, res) => {
 
     return res.send(formattedStrip);
 })
+
+app.use((error, req, res, next) => {
+    if(error) {
+        console.error("Error during API call", error);
+        return res.send("callsign not found");
+    }
+    return next();
+});
 
 app.listen(port, () => {
     console.log(`App running on port ${port}`);
