@@ -19,7 +19,3 @@ Go to BocaPrinterDrivers -> dpinstx64.exe
 
 
 Once repository cloned into folder, run `npm i`
-
-
-
-Either put your `acft_database.json` file (the one from your python strip printer) into the main folder or change the file location on line 179 of `index.js`
